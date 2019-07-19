@@ -1,6 +1,6 @@
-# mandiri
-situs bengkel madiri
-require :
-1 materialize css & js /n
-2 jquery /n
-3 sweetalert2 /n
+# mandiri <br>
+situs bengkel madiri <br>
+require : <br>
+1 materialize css & js <br>
+2 jquery <br>
+3 sweetalert2 <br>
