@@ -5,4 +5,10 @@ header{
 	background-size: cover;
 	background-position: center;
 	text-align: center;
+	position: relative;
+}
+#keranjang{
+	position:absolute;
+	bottom:8px;
+	right:8px;
 }
