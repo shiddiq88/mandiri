@@ -16,7 +16,7 @@
           <div class="col s12">
             <ul class="tabs">
               <li class="tab col s6"><a class="active" href="#lsit">List Part</a></li>
-              <li class="tab col s6"><a href="#content-keranjang"><span>Keranjang</span><span class="badge" id="count-cart">4</span></a></li>
+              <li class="tab col s6"><a href="#content-keranjang"><span>Keranjang</span><span class="new badge" id="count-cart">0</span></a></li>
             </ul>
           </div>
           <div id="lsit" class="col s12">
@@ -60,10 +60,24 @@
             </ul>
           </div>
           <div id="content-keranjang" class="col s12">
-             <table>
-                    <tbody id="list-keranjang">
+             <table >
+                <thead>
+                  <tr>
+                    <th>Nama</th>
+                    <th>Qty</th>
+                    <th>Harga</th>
+                    <th colspan="2">Total</th>
+                  </tr>
+                </thead>
+                <tbody id="list-keranjang">
                       
-                    </tbody>
+                </tbody>
+                <tfoot>
+                    <tr >
+                      <td colspan="3"> total</td>
+                      <td colspan="2" id="total-belanja"></td>
+                    </tr>
+                </tfoot>
               </table>
           </div>
         </div>

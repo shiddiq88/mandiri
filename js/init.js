@@ -32,35 +32,31 @@ partReff.on('value', function(snapshot){
 		daftarHarga[item2]=spart[item2];
 		})
 	}) 
+})
 console.log(daftarHarga)
 // ui keranjang
 let cartReff = db.ref("/cart")
 cartReff.on('value', function(snapCart){
 	let cart = (snapCart.exists()) ? snapCart.val() : []
-	let jmlCart = item.length == 0 ? '' : Object.keys(item).length
-	$('#count-'+item).text(jmlCart)
-		Object.keys(item).forEach(function(item2){
+	let jmlCart = cart.length == 0 ? '' : Object.keys(cart).length
+	let total=0
+	$('#list-keranjang').empty()
+	$('#count-cart').text(jmlCart)
+	Object.keys(cart).forEach(function(item){
 			$('#list-keranjang').append(
 			` <tr>
-                  <td>`+ item2 +`</td>
-                  <td>`+ 2 +`</td>
-                  <td><a href=""></a><i class="material-icons red-text">add_circle</i></td>
+                  <td>`+ item +`</td>
+                  <td>`+ cart[item] +`</td>
+                  <td>`+ IDR(daftarHarga[item]).format(true)+`</td>
+                  <td> `+ IDR(cart[item]*daftarHarga[item]).format(true) +`</td>
+                  <td><a href=""></a><i class="material-icons yellow-text">cancel</i></td>
                </tr>
 			`)
-// console.log(cart[item])
-// console.log(item)
-// console.log(item2)
-
-		})	
-	})
+	total += cart[item]*daftarHarga[item]
+	})	
+	console.log(total)
+	$("#total-belanja").text( IDR(total).format(true) )
 })
 
-
-
-// aktivasi collapsible materializ css
+// aktivasi materializ css
 M.AutoInit();
-// $(document).ready(function(){
-//   $('.collapsible').collapsible();
-//   $('.tabs').tabs();
-//   });
-
