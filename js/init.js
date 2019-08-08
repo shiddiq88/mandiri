@@ -48,7 +48,7 @@ cartReff.on('value', function(snapCart){
 	$('#list-keranjang').empty()
 	$('#count-cart').text(jmlCart)
 	Object.keys(cart).forEach(function(item){
-			$('#list-keranjang').append(
+		$('#list-keranjang').append(
 			` <tr>
                   <td class='desc'>`+ item +`</td>
                   <td class='qty'>`+ cart[item] +`</td>
@@ -56,22 +56,22 @@ cartReff.on('value', function(snapCart){
                   <td> `+ IDR(cart[item]*daftarHarga[item]).format(true) +`</td>
                   <td><a href=""></a><i class="material-icons red-text hapus" >cancel</i></td>
                </tr>
-			`)
+		`)
 	total += cart[item]*daftarHarga[item]
 	$('#'+item.split(' ').join('-')).siblings('.btnList').html('<a href=""></a><i class="material-icons green-text" >check_circle</i>')
-	console.log($('#'+item.split(' ').join('-')).siblings('.btnList').html())
+	// console.log($('#'+item.split(' ').join('-')).siblings('.btnList').html())
 	})	
 	$("#total-belanja").text( IDR(total).format(true) )
 })
 
-// tambah cart
+// event tombol tambah cart
 $(document).on('click','.partList', function(){
 	let namaPart =$(this).parent().siblings(".desc").text() 
 	let jml = prompt("masukan jumlah barang!")
 	db.ref('/cart/'+namaPart).set(parseInt(jml))
 })
 
-// hapus cart
+// event tombol hapus cart
 $(document).on('click','.hapus', function(){
 	let namaPart =$(this).parent().siblings(".desc").text() 
 	db.ref('/cart/'+namaPart).set(null)
@@ -80,12 +80,39 @@ $(document).on('click','.hapus', function(){
 
 })
 
-// ubah Qty
+// event tombol ubah Qty
 $(document).on('click','.qty', function(){
 	let namaPart =$(this).siblings(".desc").text() 
 	let jml = prompt("rubah Qty "+namaPart)
-	db.ref('/cart/'+namaPart).set(parseInt(jml))
+	if (isNaN(jml)) {
+		alert('jml mengandung karakter terlarang')
+	} else {
+	db.ref('/cart/'+namaPart).set(parseInt(jml))	
+	}
 })
+
+// event tombol tambah data 
+$(document).on('click','#btn-tambah-data',function(){
+	// document.location.href = '#!'
+	let desc = $('#desc-tambah-data').val()
+	let kategori = $('#kategori-tambah-data').val()
+	let price = $('#price-tambah-data').val()
+//	$('#modal1').close()
+    if (desc == '' || price == '' ){
+    	alert('nama part atau harga tidak boleh kosong')
+    } else if ( !desc.match(/^[A-Za-z]+$/) || isNaN(price) ) {
+    	alert('nama part atau harga mengaandung karakter terlarang')
+    } else {
+	    let conf = confirm('nama : '+desc+'\n kategori : '+kategori+'\n harga : '+price+'\n apakah anda yakin?')
+	    if (conf) {
+			db.ref('/part/'+kategori+'/'+desc).set(parseInt(price))
+			window.location.reload()
+	    } 	
+    }
+
+})
+
+
 
 // aktivasi materializ css
 M.AutoInit();
