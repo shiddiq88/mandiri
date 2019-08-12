@@ -14,6 +14,9 @@ var db = firebase.database();
 // funtion currency to IDR
 var IDR = value => currency(value, { symbol: 'Rp ', decimal: ',', separator: '.' });
 
+// aktivasi materializ css
+M.AutoInit();
+
 let daftarHarga={};
 var partReff = db.ref("/part");
 partReff.on('value', function(snapshot){
@@ -28,8 +31,8 @@ partReff.on('value', function(snapshot){
 		let harga = IDR(spart[item2]).format(true);
 		$('#'+item).append(
 			` <tr>
-                  <td id="`+item2.split(' ').join('-')+`" class="desc">`+ item2 +`</td>
-                  <td>`+ harga +`</td>
+                  <td id="`+item2.split(' ').join('-')+`" class="desc-part">`+ item2 +`</td>
+                  <td class='price-part' data-harga=${spart[item2]}>`+ harga +`</td>
                   <td class="btnList"><a href=""></a><i class="material-icons orange-text partList">add_circle</i></td>
                </tr>
 			`)
@@ -64,9 +67,8 @@ cartReff.on('value', function(snapCart){
 
 // event tombol tambah cart
 $(document).on('click','.partList', function(){
-	let namaPart =$(this).parent().siblings(".desc").text() 
-	async function start() {
-		const {value: number} = await Swal.fire({
+	let namaPart =$(this).parent().siblings(".desc-part").text() 
+	Swal.fire({
 		  title: 'Jumlah '+namaPart+' :',
 		  input: 'text',
 		  inputPlaceholder: 'masukan jumlah yang diinginkan!',
@@ -78,13 +80,17 @@ $(document).on('click','.partList', function(){
 		  	return 'input mengandung karakter terlarang!'
 		  	} 
   		}
+	}).then(result=>{
+		if (result.value){
+		db.ref('/cart/'+namaPart).set(parseInt(result.value))
+		Swal.fire({
+		    	type: 'success',   
+				title: `${namaPart} telah ditambahkan sebanyak ${result.value}`,
+				showConfirmButton: false,
+				timer: 1500 })
+		}
 	})
 
-	if (number) {
-		Swal.fire('berhasil menambah ' + namaPart+' sebanyak '+ number)
-		db.ref('/cart/'+namaPart).set(parseInt(number))
-	}}
-	start()
 })
 
 // event tombol hapus cart
@@ -93,7 +99,7 @@ $(document).on('click','.hapus', function(){
 	let selectorDecs = $(this).parents('td').siblings('.desc').text()
 	Swal.fire({
 	  title: 'Anda yakin?',
-	  text: "apakah anda yakin menghapu "+namaPart+' dari cart',
+	  text: "apakah anda yakin menghapus "+namaPart+' dari cart',
 	  type: 'warning',
 	  showCancelButton: true,
 	  confirmButtonColor: '#3085d6',
@@ -140,12 +146,11 @@ $(document).on('click','.qty', function(){
 					title: 'berhasil menghapus ' + namaPart,
 					showConfirmButton: false,
 					timer: 1500 })
-
 		} else if (number > 0){
 			db.ref('/cart/'+namaPart).set(parseInt(number))
 			Swal.fire({
 			    	type: 'success',   
-					title: 'berhasil merubah qty ' + namaPart+' menjadi '+ number,
+					title: 'berhasil merubah qty' + namaPart+' menjadi '+ number,
 					showConfirmButton: false,
 					timer: 1500 })
 		}
@@ -186,5 +191,72 @@ $(document).on('click','#btn-tambah-data',function(){
 
 })
 
-// aktivasi materializ css
-M.AutoInit();
+// edit atau hapus list Part
+$(document).on('click','.desc-part',function(){
+ let descPart = [$(this).parents('tbody').attr('id'),$(this).text(),parseInt($(this).siblings('.price-part').attr('data-harga'))]
+ console.log(descPart)
+ Swal.fire({
+    title:`Ubah / hapus ${descPart[0]}?`,
+    input:"radio",
+    showCancelButton: true,
+    confirmButtonText: 'Next',
+    inputOptions:{
+      ubah : 'ubah',
+      hapus : 'hapus'
+      },
+      inputValidator: (value) => {
+        if (!value) {
+          return 'masukan pulihan anda? (Ubah/Hapus)'
+        }
+      }
+  }).then((result)=>{
+    if (result.value == 'ubah'){
+      Swal.fire({
+        title: `Anda akan merubah : ${descPart[0]}`,
+        showCancelButton: true,
+        html:
+          '<label for="swal-desc"> desc </label><input id="swal-desc" class="swal2-input">'+
+           '<label for="swal-price"> harga </label><input id="swal-price" class="swal2-input">',
+        focusConfirm: false,
+        preConfirm: () => {
+          let desc = document.getElementById('swal-desc').value 
+          let price = parseInt(document.getElementById('swal-price').value)
+          if (desc == ''|| price == ''){
+            Swal.showValidationMessage(`desc dan harga tidak boleh kosong`)
+          } else if (!desc.match(/^[A-Za-z\ 0-9]+$/) || isNaN(price)){
+            Swal.showValidationMessage(`input desc data harga mengandung karakter terlarang`)
+          }
+          return [ desc , price ]               
+        } 
+      }).then( (hasil) =>{
+        if (hasil.value){
+          swal.fire({
+            type : 'question',
+            text : `anda yakin merubah ${hasil.value[0]} menjadi harga ${hasil.value[1]}`,
+            showCancelButton: true
+          }).then(result=>{
+            if (result.value) {
+              db.ref(`/part/${descPart[0]}/${hasil.value[0]}`).set(hasil.value[1])
+              swal.fire({
+                type : 'success',
+                text : `horee berhasil merubah ${hasil.value[0]} menjadi harga ${hasil.value[1]}`,
+                showConfirmButton: false,
+                timer: 1000
+              })
+              window.location.reload()
+            }
+          })  
+        }
+      })
+    } else if ( result.value == 'hapus'){
+      db.ref(`/part/${descPart[0]}/${descPart[1]}`).set(null)
+      swal.fire({
+      type : 'success',
+      text : 'horee berhasil ngahapus',
+      showConfirmButton: false,
+      timer: 1000
+      })
+      window.location.reload()
+    }
+  })
+})
