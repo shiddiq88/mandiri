@@ -127,7 +127,6 @@ $(document).on('click','.qty', function(){
 		const {value: number} = await Swal.fire({
 		  title: 'Jumlah '+namaPart+' :',
 		  input: 'text',
-		  // inputPlaceholder: qty,
 		  inputValue: qty,
 	 	  showCancelButton: true ,
   		  inputValidator: (value) => {
@@ -196,7 +195,7 @@ $(document).on('click','.desc-part',function(){
  let descPart = [$(this).parents('tbody').attr('id'),$(this).text(),parseInt($(this).siblings('.price-part').attr('data-harga'))]
  console.log(descPart)
  Swal.fire({
-    title:`Ubah / hapus ${descPart[0]}?`,
+    title:`Ubah / hapus ${descPart[1]}?`,
     input:"radio",
     showCancelButton: true,
     confirmButtonText: 'Next',
@@ -206,17 +205,17 @@ $(document).on('click','.desc-part',function(){
       },
       inputValidator: (value) => {
         if (!value) {
-          return 'masukan pulihan anda? (Ubah/Hapus)'
+          return 'masukan pilihan anda? (Ubah/Hapus)'
         }
       }
   }).then((result)=>{
     if (result.value == 'ubah'){
       Swal.fire({
-        title: `Anda akan merubah : ${descPart[0]}`,
+        title: `Anda akan merubah : ${descPart[1]}`,
         showCancelButton: true,
         html:
-          '<label for="swal-desc"> desc </label><input id="swal-desc" class="swal2-input">'+
-           '<label for="swal-price"> harga </label><input id="swal-price" class="swal2-input">',
+          `<label for="swal-desc"> desc </label><input id="swal-desc" class="swal2-input" value="${descPart[1]}">`+
+           `<label for="swal-price"> harga </label><input id="swal-price" class="swal2-input" value="${descPart[2]}">`,
         focusConfirm: false,
         preConfirm: () => {
           let desc = document.getElementById('swal-desc').value 
@@ -232,14 +231,14 @@ $(document).on('click','.desc-part',function(){
         if (hasil.value){
           swal.fire({
             type : 'question',
-            text : `anda yakin merubah ${hasil.value[0]} menjadi harga ${hasil.value[1]}`,
+            text : `anda yakin merubah ${hasil.value[0]} menjadi harga ${IDR(hasil.value[1]).format(true)}`,
             showCancelButton: true
           }).then(result=>{
             if (result.value) {
               db.ref(`/part/${descPart[0]}/${hasil.value[0]}`).set(hasil.value[1])
               swal.fire({
                 type : 'success',
-                text : `horee berhasil merubah ${hasil.value[0]} menjadi harga ${hasil.value[1]}`,
+                text : `horee berhasil merubah ${hasil.value[0]} menjadi harga ${IDR(hasil.value[1]).format(true)}`,
                 showConfirmButton: false,
                 timer: 1000
               })
@@ -252,7 +251,7 @@ $(document).on('click','.desc-part',function(){
       db.ref(`/part/${descPart[0]}/${descPart[1]}`).set(null)
       swal.fire({
       type : 'success',
-      text : 'horee berhasil ngahapus',
+      text : `${descPart[1]} berhasil dihapus`,
       showConfirmButton: false,
       timer: 1000
       })
