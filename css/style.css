@@ -1,5 +1,6 @@
 header{
-	background-image: url("https://firebasestorage.googleapis.com/v0/b/bengkel-mandiri-dep.appspot.com/o/banner.png?alt=media&token=2455a8c2-ae70-49cf-8eb2-b293b8ce586e");
+	/*background-image: url("https://firebasestorage.googleapis.com/v0/b/bengkel-mandiri-dep.appspot.com/o/banner.png?alt=media&token=2455a8c2-ae70-49cf-8eb2-b293b8ce586e");*/
+	background-image: url("../assets/alexey-lin-j-0pjgxE1kc-unsplash.jpg");
 	height: 200px;
 	background-repeat: no-repeat;
 	background-size: cover;
