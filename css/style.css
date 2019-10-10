@@ -9,9 +9,15 @@ header{
 	position: relative;
 
 }
-.modal-trigger{
+.tombol-float-kanan{
 	position:fixed;
 	bottom:18px;
 	right:24px;
+}
 
+.desc-part , .partList , .hapus , .qty{
+	cursor: pointer;
+}
+body {
+	font-size: .85em;
 }

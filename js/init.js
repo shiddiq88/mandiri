@@ -24,7 +24,6 @@ partReff.on('value', function(snapshot){
 	let tempObj = {}
 	
 	let arrayCart = Object.keys(tempObj)
-	console.log(arrayCart)
 	Object.keys(part).forEach(function(item,index){
 		let spart = part[item]
 		Object.keys(spart).forEach(function(item2,index2){
@@ -46,6 +45,11 @@ let cartReff = db.ref("/cart")
 cartReff.on('value', function(snapCart){
 	let cart = (snapCart.exists()) ? snapCart.val() : []
 	let jmlCart = cart.length == 0 ? '' : Object.keys(cart).length
+	if (jmlCart==0){
+		$('#clear-cart').css('display','none')
+	} else {
+		$('#clear-cart').css('display','inline')
+	}
 	let total=0
 	$('#list-keranjang').empty()
 	$('#count-cart').text(jmlCart)
@@ -60,7 +64,7 @@ cartReff.on('value', function(snapCart){
                </tr>
 		`)
 	total += cart[item]*daftarHarga[item]
-	$('#'+item.split(' ').join('-')).siblings('.btnList').html('<a href=""></a><i class="material-icons green-text" >check_circle</i>')
+	$('#'+item.split(' ').join('-')).siblings('.btnList').html('<a href=""></a><i class="material-icons green-text btn-check" >check_circle</i>')
 	})	
 	$("#total-belanja").text( IDR(total).format(true) )
 })
@@ -193,7 +197,6 @@ $(document).on('click','#btn-tambah-data',function(){
 // edit atau hapus list Part
 $(document).on('click','.desc-part',function(){
  let descPart = [$(this).parents('tbody').attr('id'),$(this).text(),parseInt($(this).siblings('.price-part').attr('data-harga'))]
- console.log(descPart)
  Swal.fire({
     title:`Ubah / hapus ${descPart[1]}?`,
     input:"radio",
@@ -258,4 +261,31 @@ $(document).on('click','.desc-part',function(){
       window.location.reload()
     }
   })
+})
+
+
+$("#clear-cart").on("click",function(){
+	Swal.fire({
+	  title: 'Hapus seluruh isi chart?',
+	  text: "yakin ? perubahan tidak bisa di undo",
+	  type: 'warning',
+	  showCancelButton: true,
+	  confirmButtonColor: '#3085d6',
+	  cancelButtonColor: '#d33',
+	  confirmButtonText: 'Ya !'
+	}).then((result) => {
+	  if (result.value) {
+		db.ref('/cart').set(null)
+		document.querySelectorAll(".btn-check").forEach(item=>{
+			item.innerHTML = 'add_circle'
+			item.className = 'material-icons orange-text partList'
+		})
+	    Swal.fire({
+	    	type : 'success',
+            text : 'Chart telah di kosongkan',
+            showConfirmButton: false,
+            timer: 1000
+	    })
+	  }  
+	})	
 })
