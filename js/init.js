@@ -15,7 +15,9 @@ var db = firebase.database();
 
 var IDR = value => currency(value, { symbol: 'Rp ', decimal: ',', separator: '.' });
 
+
 // ======================================= aktivasi materializ css ======================================= //
+
 M.AutoInit();
 
 // =========================================== list barang =========================================== // 
@@ -24,19 +26,18 @@ var partReff = db.ref("/part");
 partReff.on('value', function(snapshot){
 	let part = snapshot.val()
 	let tempObj = {}
-	
 	let arrayCart = Object.keys(tempObj)
 	Object.keys(part).forEach(function(item,index){
 		let spart = part[item]
 		Object.keys(spart).forEach(function(item2,index2){
 		let harga = IDR(spart[item2]).format(true);
-		$('#'+item).append(
+		document.querySelector('#'+item).innerHTML += 
 			` <tr>
                   <td id="`+item2.split(' ').join('-')+`" class="desc-part">`+ item2 +`</td>
                   <td class='price-part' data-harga=${spart[item2]}>`+ harga +`</td>
                   <td class="btnList"><i class="material-icons orange-text partList">add_circle</i></td>
                </tr>
-			`)
+			`
 		daftarHarga[item2]=spart[item2];
 		})
 	})
@@ -50,7 +51,7 @@ cartReff.on('value', function(snapCart){
 	if (jmlCart==0){
 		document.querySelector('#clear-cart').style.display = 'none'
 	} else {
-		document.querySelector('#clear-cart').style.display = ''
+		document.querySelector('#clear-cart').style.display = 'inherit'
 	}
 	let total=0
 	document.querySelector('#list-keranjang').innerHTML = ''
@@ -64,66 +65,65 @@ cartReff.on('value', function(snapCart){
                   <td> `+ IDR(cart[item]*daftarHarga[item]).format(true) +`</td>
                   <td><i class="material-icons red-text hapus" >cancel</i></td>
                </tr>`
-		const arr = document.querySelector('#'+item.split(' ').join('-')).nextSibling.nextSibling.nextSibling.nextSibling.children
-		arr[0].innerText = 'check_circle'
-		arr[0].className = 'material-icons green-text btn-check'
-		console.log( arr[0] )
+		document.querySelector('#'+item.split(' ').join('-')).nextElementSibling.nextElementSibling.innerHTML = '<i class="material-icons green-text btn-check">check_circle</i>'
 		total += cart[item]*daftarHarga[item]
 	})	
 	document.querySelector('#total-belanja').innerText = IDR(total).format(true)
 })
 
+document.querySelector('#list-keranjang').addEventListener('click' , e =>{
+	switch (e.target.className) {
 // ======================================= event tombol hapus cart ======================================= //
-$(document).on('click','.hapus', function(){
-	let namaPart =$(this).parent().siblings(".desc").text() 
-	let selectorDecs = $(this).parents('td').siblings('.desc').text()
-	Swal.fire({
-	  title: 'Anda yakin?',
-	  text: "apakah anda yakin menghapus "+namaPart+' dari cart',
-	  type: 'warning',
-	  showCancelButton: true,
-	  confirmButtonColor: '#3085d6',
-	  cancelButtonColor: '#d33',
-	  confirmButtonText: 'ya, saya yakin!'
-		}).then((result) => {
-		  if (result.value) {
-		    flashMessage(namaPart + 'telah dihapus dari cart')
-		   	db.ref('/cart/'+namaPart).set(null)
-			$('#'+selectorDecs.split(' ').join('-')).siblings('.btnList').html('<i class="material-icons orange-text partList">add_circle</i>')
-		  }
-	})
-})
-
+		case 'material-icons red-text hapus' :
+			let namaPart =e.target.parentNode.nextSibling.parentNode.childNodes[1].innerText 
+			Swal.fire({
+			  title: 'Anda yakin?',
+			  text: "apakah anda yakin menghapus "+namaPart+' dari cart',
+			  type: 'warning',
+			  showCancelButton: true,
+			  confirmButtonColor: '#3085d6',
+			  cancelButtonColor: '#d33',
+			  confirmButtonText: 'ya, saya yakin!'
+				}).then((result) => {
+				  if (result.value) {
+				    flashMessage(namaPart + 'telah dihapus dari cart')
+				   	db.ref('/cart/'+namaPart).set(null)
+					document.querySelector('#'+namaPart.split(' ').join('-')).nextElementSibling.nextElementSibling.innerHTML = '<i class="material-icons orange-text partList">add_circle</i>'
+				  }
+			})
+ 		break
 /* ======================================= event tombol ubah Qty ======================================= */
+		case 'qty' :
+			let namaPart1 = e.target.previousElementSibling.innerText
+			let qty = parseInt(e.target.innerText)
+			
+			async function start() {
+				const {value: number} = await Swal.fire({
+				  title: 'Jumlah '+namaPart1+' :',
+				  input: 'text',
+				  inputValue: qty,
+			 	  showCancelButton: true ,
+		  		  inputValidator: (value) => {
+		    		if (!value) {
+				  	return 'jumlah tidak boleh kosong'
+		    	  	} else if (isNaN(value)) {
+				  	return 'input mengandung karakter terlarang!'
+				  	} 
+		  		  }
+				})
 
-$(document).on('click','.qty', function(){
-	let namaPart =$(this).siblings(".desc").text() 
-	let qty =$(this).text() 
-	
-	async function start() {
-		const {value: number} = await Swal.fire({
-		  title: 'Jumlah '+namaPart+' :',
-		  input: 'text',
-		  inputValue: qty,
-	 	  showCancelButton: true ,
-  		  inputValidator: (value) => {
-    		if (!value) {
-		  	return 'jumlah tidak boleh kosong'
-    	  	} else if (isNaN(value)) {
-		  	return 'input mengandung karakter terlarang!'
-		  	} 
-  		  }
-		})
-
-		if (number == 0) {
-			db.ref('/cart/'+namaPart).set(null)
-			flashMessage( 'berhasil menghapus ' + namaPart )
-		} else if (number > 0){
-			db.ref('/cart/'+namaPart).set(parseInt(number))
-			flashMessage('berhasil merubah qty' + namaPart+' menjadi '+ number )
-		}
+				if (number == 0) {
+					db.ref('/cart/'+namaPart1).set(null)
+					flashMessage( 'berhasil menghapus ' + namaPart1 )
+				} else if (number > 0){
+					db.ref('/cart/'+namaPart1).set(parseInt(number))
+					flashMessage('berhasil merubah qty' + namaPart1+' menjadi '+ number )
+				}
+			}
+			start()
+		break
+		default :
 	}
-	start()
 })
 
 /* ======================================= event tombol tambah data  ======================================= */
@@ -137,16 +137,16 @@ document.querySelector('#btn-tambah-data').addEventListener('click', e => {
     	Swal.fire('Kesalahan input !','nama part atau harga mengandung karakter terlarang','error')
     } else {
 	    Swal.fire({
-		  title: 'Anda yakin?',
-		  text: "apakah anda yakin menambah "+desc+' dengan kategori : '+kategori+' dan harga : '+IDR(price).format(true),
-		  type: 'warning',
-		  showCancelButton: true,
-		  confirmButtonColor: '#3085d6',
-		  cancelButtonColor: '#d33',
-		  confirmButtonText: 'ya, saya yakin!'
-			}).then((result) => {
-			  if (result.value) {
-				flashMessage(desc+' dengan kategori : '+kategori+' dan harga : '+IDR(price).format(true)+' telah ditambahkan')
+			title: 'Anda yakin?',
+		  	text: "apakah anda yakin menambah "+desc+' dengan kategori : '+kategori+' dan harga : '+IDR(price).format(true),
+		  	type: 'warning',
+		  	showCancelButton: true,
+		  	confirmButtonColor: '#3085d6',
+		  	cancelButtonColor: '#d33',
+		  	confirmButtonText: 'ya, saya yakin!'
+		}).then((result) => {
+				if (result.value) {
+					flashMessage(desc+' dengan kategori : '+kategori+' dan harga : '+IDR(price).format(true)+' telah ditambahkan')
 				}
 			db.ref('/part/'+kategori+'/'+desc).set(parseInt(price))
 			window.location.reload()
@@ -176,9 +176,9 @@ document.querySelector('#clear-cart').addEventListener( 'click' , function(){
 	  	}  
 	})	
 })
+
 // ============================================ event List Part ============================================ //
 document.querySelector('#list-part').addEventListener( 'click' , e => {
-	// console.log(e.target.parentNode.parentNode.id)
 	switch (e.target.className) {
 		/*  ===================================== event ubay key ===================================== */
 		case 'desc-part' : 
