@@ -50,8 +50,12 @@ cartReff.on('value', function(snapCart){
 	let jmlCart = cart.length == 0 ? '' : Object.keys(cart).length
 	if (jmlCart==0){
 		document.querySelector('#clear-cart').style.display = 'none'
+		document.querySelector('#chart-table').style.display = 'none'
+		document.querySelector('#empty-chart').innerHTML = '<img src="./assets/empty-chart.png" alt="keranjang kosong" height="220px">'
 	} else {
 		document.querySelector('#clear-cart').style.display = 'inherit'
+		document.querySelector('#chart-table').style.display = ''
+		document.querySelector('#empty-chart').innerHTML = ''
 	}
 	let total=0
 	document.querySelector('#list-keranjang').innerHTML = ''
@@ -78,7 +82,7 @@ document.querySelector('#list-keranjang').addEventListener('click' , e =>{
 			let namaPart =e.target.parentNode.nextSibling.parentNode.childNodes[1].innerText 
 			Swal.fire({
 			  title: 'Anda yakin?',
-			  text: "apakah anda yakin menghapus "+namaPart+' dari cart',
+			  text: `apakah anda yakin menghapus ${namaPart} dari cart`,
 			  type: 'warning',
 			  showCancelButton: true,
 			  confirmButtonColor: '#3085d6',
@@ -86,7 +90,7 @@ document.querySelector('#list-keranjang').addEventListener('click' , e =>{
 			  confirmButtonText: 'ya, saya yakin!'
 				}).then((result) => {
 				  if (result.value) {
-				    flashMessage(namaPart + 'telah dihapus dari cart')
+				    flashMessage(`${namaPart} telah dihapus dari cart`)
 				   	db.ref('/cart/'+namaPart).set(null)
 					document.querySelector('#'+namaPart.split(' ').join('-')).nextElementSibling.nextElementSibling.innerHTML = '<i class="material-icons orange-text partList">add_circle</i>'
 				  }
