@@ -137,7 +137,7 @@ document.querySelector('#btn-tambah-data').addEventListener('click', e => {
 	let price = document.querySelector('#price-tambah-data').value
     if (desc == '' || price == '' ){
     	Swal.fire('Kesalahan input !','nama part atau harga tidak boleh kosong','error')
-    } else if ( !desc.match(/^[A-Za-z ]+$/) || isNaN(price) ) {
+    } else if ( !desc.match(/^[0-9A-Za-z ]+$/) || isNaN(price) ) {
     	Swal.fire('Kesalahan input !','nama part atau harga mengandung karakter terlarang','error')
     } else {
 	    Swal.fire({
@@ -216,7 +216,7 @@ document.querySelector('#list-part').addEventListener( 'click' , e => {
 		          			let price = parseInt(document.getElementById('swal-price').value)
 		          				if (desc == ''|| price == ''){
 		            				Swal.showValidationMessage(`desc dan harga tidak boleh kosong`)
-		          				} else if ( !desc.match(/^[A-Za-z ]+$/) || isNaN(price)){
+		          				} else if ( !desc.match(/^[0-9A-Za-z ]+$/) || isNaN(price)){
 		            				Swal.showValidationMessage(`input desc data harga mengandung karakter terlarang`)
 		        	  			}
 		          			return [ desc , price ]               
