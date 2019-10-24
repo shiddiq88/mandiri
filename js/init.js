@@ -229,15 +229,19 @@ document.querySelector('#list-part').addEventListener( 'click' , e => {
 		            			showCancelButton: true
 		          			}).then(result=>{
 		            			if (result.value) {
+		          					if ( descPart[1] !==  hasil.value[0] ){
+			              				db.ref(`/part/${descPart[0]}/${descPart[1]}`).set(null)
+		          					}
 		              				db.ref(`/part/${descPart[0]}/${hasil.value[0]}`).set(hasil.value[1])
-		              				flashMessage('`horee berhasil merubah ${hasil.value[0]} menjadi harga ${IDR(hasil.value[1]).format(true)}`')
+		              				flashMessage(`horee berhasil merubah ${hasil.value[0]} menjadi harga ${IDR(hasil.value[1]).format(true)}`)
 		              				window.location.reload()
 		            			}
 		          			})  
 		    		    }
 		    		})
 		    	} else if ( result.value == 'hapus'){
-		      		db.ref(`/part/${descPart[0]}/${descPart[1]}`).set(null)
+		      		db.ref(`part/${descPart[0]}/${descPart[1]}`).set(null)
+		      		console.log(`/part/${descPart[0]}/${descPart[1]}`)
 		      		flashMessage(`${descPart[1]} berhasil dihapus`)
 			      	window.location.reload()
 		    	}
