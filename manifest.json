@@ -1,0 +1,52 @@
+{
+  "short_name": "benkelM",
+  "name": "Bengkel Mandiri ciganitri",
+  "icons": [
+    {
+      "src": "assets/icons/bengkel-mandiri-72.png",
+      "type": "image/png",
+      "sizes": "72x72"
+    },
+    {
+      "src": "assets/icons/bengkel-mandiri-96.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "assets/icons/bengkel-mandiri-128.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "assets/icons/bengkel-mandiri-144.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    },
+    {
+      "src": "assets/icons/bengkel-mandiri-152.png",
+      "type": "image/png",
+      "sizes": "152x152"
+    },
+    {
+      "src": "assets/icons/bengkel-mandiri-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "assets/icons/bengkel-mandiri-384.png",
+      "type": "image/png",
+      "sizes": "384x384"
+    },
+    {
+      "src": "assets/icons/bengkel-mandiri-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+
+  "start_url"         : "index.html",
+  "display"           : "standalone",
+  "orientation"       : "portrait",
+  "background_color"  : "#fcf803",
+  "theme_color"       : "#fcf803"
+}
