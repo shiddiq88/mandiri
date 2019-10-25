@@ -49,16 +49,34 @@ cartReff.on('value', function(snapCart){
 	let cart = (snapCart.exists()) ? snapCart.val() : []
 	let jmlCart = cart.length == 0 ? '' : Object.keys(cart).length
 	if (jmlCart==0){
-		document.querySelector('#clear-cart').style.display = 'none'
-		document.querySelector('#chart-table').style.display = 'none'
-		document.querySelector('#empty-chart').innerHTML = '<img src="./assets/empty-chart.png" alt="keranjang kosong" height="220px">'
+		document.querySelector('#content-keranjang').innerHTML = '<img src="./assets/empty-chart.png" alt="keranjang kosong" height="220px">'
+		document.querySelector('#content-keranjang').style.background = 'url("./assets/re32.png")'
 	} else {
-		document.querySelector('#clear-cart').style.display = 'inherit'
-		document.querySelector('#chart-table').style.display = ''
-		document.querySelector('#empty-chart').innerHTML = ''
+		document.querySelector('#content-keranjang').style.background = ''
+		document.querySelector('#content-keranjang').innerHTML = `
+			<table id="chart-table">
+	          <thead>
+	            <tr>
+	              <th>Nama</th>
+	              <th>Qty</th>
+	              <th>Harga</th>
+	              <th colspan="2">Total</th>
+	            </tr>
+	          </thead>
+	          <tbody id="list-keranjang">
+	                     
+	          </tbody>
+	          <tfoot>
+	            <tr >
+	              <td colspan="3"> total</td>
+	              <td colspan="2" id="total-belanja"></td>
+	            </tr>
+	          </tfoot>
+	        </table>
+	        <a id="clear-cart" class="btn red tombol-float-kanan">clear chart</a>`
 	}
 	let total=0
-	document.querySelector('#list-keranjang').innerHTML = ''
+	// document.querySelector('#list-keranjang').innerHTML = ''
 	document.querySelector('#count-cart').innerText = jmlCart
 	Object.keys(cart).forEach(function(item){
 		document.querySelector('#list-keranjang').innerHTML += 
@@ -72,13 +90,12 @@ cartReff.on('value', function(snapCart){
 		document.querySelector('#'+item.split(' ').join('-')).nextElementSibling.nextElementSibling.innerHTML = '<i class="material-icons green-text btn-check">check_circle</i>'
 		total += cart[item]*daftarHarga[item]
 	})	
-	document.querySelector('#total-belanja').innerText = IDR(total).format(true)
+	if (total > 0 ) {	document.querySelector('#total-belanja').innerText = IDR(total).format(true) }
 })
 
-document.querySelector('#list-keranjang').addEventListener('click' , e =>{
-	switch (e.target.className) {
+document.querySelector('#content-keranjang').addEventListener('click' , e =>{
 // ======================================= event tombol hapus cart ======================================= //
-		case 'material-icons red-text hapus' :
+	if ( e.target.className == 'material-icons red-text hapus') {
 			let namaPart =e.target.parentNode.nextSibling.parentNode.childNodes[1].innerText 
 			Swal.fire({
 			  title: 'Anda yakin?',
@@ -95,9 +112,10 @@ document.querySelector('#list-keranjang').addEventListener('click' , e =>{
 					document.querySelector('#'+namaPart.split(' ').join('-')).nextElementSibling.nextElementSibling.innerHTML = '<i class="material-icons orange-text partList">add_circle</i>'
 				  }
 			})
- 		break
+ 	}
 /* ======================================= event tombol ubah Qty ======================================= */
-		case 'qty' :
+	if ( e.target.className == 'qty' ){
+
 			let namaPart1 = e.target.previousElementSibling.innerText
 			let qty = parseInt(e.target.innerText)
 			
@@ -125,9 +143,28 @@ document.querySelector('#list-keranjang').addEventListener('click' , e =>{
 				}
 			}
 			start()
-		break
-		default :
 	}
+/* ======================================= event clear chart ======================================= */
+	if (e.target.id == 'clear-cart'){
+		Swal.fire({
+		  title: 'Hapus seluruh isi chart?',
+		  text: "yakin ? perubahan tidak bisa di undo",
+		  type: 'warning',
+		  showCancelButton: true,
+		  confirmButtonColor: '#3085d6',
+		  cancelButtonColor: '#d33',
+		  confirmButtonText: 'Ya !'
+		}).then((result) => {
+			if (result.value) {
+				db.ref('/cart').set(null)
+				document.querySelectorAll(".btn-check").forEach(item=>{
+					item.innerHTML = 'add_circle'
+					item.className = 'material-icons orange-text partList'
+				})
+		   		flashMessage('Chart telah di kosongkan')
+		  	}  
+		})	
+	} 
 })
 
 /* ======================================= event tombol tambah data  ======================================= */
@@ -159,27 +196,6 @@ document.querySelector('#btn-tambah-data').addEventListener('click', e => {
 
 })
 
-/* ======================================= event clear chart ======================================= */
-document.querySelector('#clear-cart').addEventListener( 'click' , function(){
-	Swal.fire({
-	  title: 'Hapus seluruh isi chart?',
-	  text: "yakin ? perubahan tidak bisa di undo",
-	  type: 'warning',
-	  showCancelButton: true,
-	  confirmButtonColor: '#3085d6',
-	  cancelButtonColor: '#d33',
-	  confirmButtonText: 'Ya !'
-	}).then((result) => {
-		if (result.value) {
-			db.ref('/cart').set(null)
-			document.querySelectorAll(".btn-check").forEach(item=>{
-				item.innerHTML = 'add_circle'
-				item.className = 'material-icons orange-text partList'
-			})
-	   		flashMessage('Chart telah di kosongkan')
-	  	}  
-	})	
-})
 
 // ============================================ event List Part ============================================ //
 document.querySelector('#list-part').addEventListener( 'click' , e => {
@@ -273,6 +289,8 @@ document.querySelector('#list-part').addEventListener( 'click' , e => {
 			// console.log('kumahakeun yeuh....!')
 	}
 } )
+
+window.onresize = changeImage
 
 const flashMessage = ( message , timer=1000 , type='success' ) => {
 	swal.fire({	

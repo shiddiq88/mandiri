@@ -1,14 +1,13 @@
-header{
-	/*background-image: url("https://firebasestorage.googleapis.com/v0/b/bengkel-mandiri-dep.appspot.com/o/banner.png?alt=media&token=2455a8c2-ae70-49cf-8eb2-b293b8ce586e");*/
-	background-image: url("../assets/alexey-lin-j-0pjgxE1kc-unsplash.jpg");
-	height: 200px;
-	background-repeat: no-repeat;
-	background-size: cover;
-	background-position: center;
-	text-align: center;
-	position: relative;
-
+#logo-mandiri {
+	height: 180px;
+	display: block;
+	margin-right: auto;
+	margin-right: auto;
 }
+.parallax-container {
+      height: 200px;
+    }
+
 .tombol-float-kanan{
 	position:fixed;
 	bottom:18px;
@@ -27,9 +26,6 @@ img {
 	margin-right: auto;
 }
 
-div #empty-chart {
-  background-image: url("../assets/re32.png");
-}
 iframe {
 	margin-top: 10px;
 }

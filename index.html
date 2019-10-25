@@ -11,9 +11,22 @@
     </head>
 
     <body class="yellow lighten-5">
-      <header>
-        <img src="./assets/mandiri.svg" height="200px">
-      </header>
+      <div class="parallax-container" >
+        <img src="./assets/mandiri.svg" id="logo-mandiri">
+        <div class="parallax">
+          <img id="image-parallax" src="" width="100%" >
+          <script type="text/javascript">
+            const changeImage = () => {
+              if (window.innerHeight > window.innerWidth){
+                    document.querySelector('#image-parallax').src = "./assets/alexey-lin-j-0pjgxE1kc-unsplash.png"
+                } else {
+                  document.querySelector('#image-parallax').src = "./assets/alexey-lin-j-0pjgxE1kc-unsplash-panjang.png"
+                }
+            }
+            changeImage()
+          </script>
+        </div>
+      </div>
       
       <div class="row">
           <div class="col s12">
@@ -113,31 +126,13 @@
       </div>
 <!--        CART konten        -->    
       <div id="content-keranjang" class="col s12">
-      <div id="empty-chart"></div>
-        <table id="chart-table">
-          <thead>
-            <tr>
-              <th>Nama</th>
-              <th>Qty</th>
-              <th>Harga</th>
-              <th colspan="2">Total</th>
-            </tr>
-          </thead>
-          <tbody id="list-keranjang">
-                     
-          </tbody>
-          <tfoot>
-            <tr >
-              <td colspan="3"> total</td>
-              <td colspan="2" id="total-belanja"></td>
-            </tr>
-          </tfoot>
-        </table>
-        <a id="clear-cart" class="btn red tombol-float-kanan">clear chart</a>
+
       </div>
 
       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15841.065026489785!2d107.65704774659733!3d-6.977878540962905!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e9cc0ed8811d%3A0xe6079dd178d1e14f!2sMandiri!5e0!3m2!1sid!2sid!4v1563523560547!5m2!1sid!2sid" width=100% height="250" frameborder="0" style="border:0" allowfullscreen></iframe>
 
+      <center><small> &copy; 2019 solihin</small></center>
+      <div class="orange" style="padding-top: 8px;"></div>
       <!-- The core Firebase JS SDK is always required and must be listed first -->
       <script src="https://www.gstatic.com/firebasejs/6.3.1/firebase-app.js"></script>
       <script src="https://www.gstatic.com/firebasejs/6.3.1/firebase-database.js"></script>
