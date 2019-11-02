@@ -39,7 +39,7 @@ self.addEventListener('activate', (event) => {
     const cacheNames = await caches.keys();
     await Promise.all(
       cacheNames.filter((cacheName) => {
-          return CACHE_NAME == cacheName
+          return CACHE_NAME !== cacheName
         // Return true if you want to remove this cache,
         // but remember that caches are shared across
         // the whole origin

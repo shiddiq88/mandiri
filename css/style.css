@@ -29,3 +29,9 @@ img {
 iframe {
 	margin-top: 10px;
 }
+b {
+	font-size: 1.3em;
+}
+.text-center{
+	text-align: center;
+}

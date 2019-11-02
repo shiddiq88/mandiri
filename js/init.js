@@ -20,6 +20,21 @@ var IDR = value => currency(value, { symbol: 'Rp ', decimal: ',', separator: '.'
 
 M.AutoInit();
 
+function changeImage(){
+    if (window.innerHeight > window.innerWidth){
+        document.querySelector('#image-parallax').src = "./assets/alexey-lin-j-0pjgxE1kc-unsplash.png"
+        document.querySelector('body').style.padding="0px"
+        document.querySelector('.parallax-container').style.height="20 0px"
+        document.querySelector('#logo-mandiri').style.height="180px"
+    } else {
+        document.querySelector('#image-parallax').src = "./assets/alexey-lin-j-0pjgxE1kc-unsplash-panjang.png"
+        document.querySelector('body').style.padding="0px 2%"
+        document.querySelector('.parallax-container').style.height="250px"
+        document.querySelector('#logo-mandiri').style.height="200px"
+    }
+}
+changeImage()
+window.onresize = changeImage
 // =========================================== list barang =========================================== // 
 let daftarHarga={};
 var partReff = db.ref("/part");
@@ -33,8 +48,8 @@ partReff.on('value', function(snapshot){
 		let harga = IDR(spart[item2]).format(true);
 		document.querySelector('#'+item).innerHTML += 
 			` <tr>
-                  <td id="`+item2.split(' ').join('-')+`" class="desc-part">`+ item2 +`</td>
-                  <td class='price-part' data-harga=${spart[item2]}>`+ harga +`</td>
+                  <td id="${item2.split(' ').join('-')}" class="desc-part">${item2}</td>
+                  <td class='price-part' data-harga=${spart[item2]} >${harga}</td>
                   <td class="btnList"><i class="material-icons orange-text partList">add_circle</i></td>
                </tr>
 			`
@@ -56,47 +71,46 @@ cartReff.on('value', function(snapCart){
 		document.querySelector('#content-keranjang').innerHTML = `
 			<table id="chart-table">
 	          <thead>
-	            <tr>
-	              <th>Nama</th>
-	              <th>Qty</th>
-	              <th>Harga</th>
-	              <th colspan="2">Total</th>
+	            <tr class="orange white-text text-center">
+	              <th class="text-center">Qty</th>
+	              <th class="text-center">Nama</th>
+	              <th class="text-center">Harga</th>
+	              <th colspan="2" class="text-center">Jumlah  Harga</th>
 	            </tr>
 	          </thead>
 	          <tbody id="list-keranjang">
 	                     
 	          </tbody>
 	          <tfoot>
-	            <tr >
-	              <td colspan="3"> total</td>
-	              <td colspan="2" id="total-belanja"></td>
+	            <tr class="orange white-text">
+	              <td colspan="2" class="text-center"> <b> Total </b> </td>
+	              <td colspan="3" id="total-belanja" class="text-center"></td>
 	            </tr>
 	          </tfoot>
 	        </table>
 	        <a id="clear-cart" class="btn red tombol-float-kanan">clear chart</a>`
 	}
 	let total=0
-	// document.querySelector('#list-keranjang').innerHTML = ''
 	document.querySelector('#count-cart').innerText = jmlCart
 	Object.keys(cart).forEach(function(item){
 		document.querySelector('#list-keranjang').innerHTML += 
 			` <tr>
-                  <td class='desc'>`+ item +`</td>
-                  <td class='qty'>`+ cart[item] +`</td>
-                  <td>`+ IDR(daftarHarga[item]).format(true)+`</td>
-                  <td> `+ IDR(cart[item]*daftarHarga[item]).format(true) +`</td>
+                  <td class='qty text-center'> ${cart[item]} </td>
+                  <td class='desc'>${item}</td>
+                  <td> ${IDR(daftarHarga[item]).format(true)} </td>
+                  <td>  ${IDR(cart[item]*daftarHarga[item]).format(true)} </td>
                   <td><i class="material-icons red-text hapus" >cancel</i></td>
                </tr>`
 		document.querySelector('#'+item.split(' ').join('-')).nextElementSibling.nextElementSibling.innerHTML = '<i class="material-icons green-text btn-check">check_circle</i>'
 		total += cart[item]*daftarHarga[item]
 	})	
-	if (total > 0 ) {	document.querySelector('#total-belanja').innerText = IDR(total).format(true) }
+	if (total > 0 ) {	document.querySelector('#total-belanja').innerHTML = `<b> ${IDR(total).format(true)} </b>` }
 })
 
 document.querySelector('#content-keranjang').addEventListener('click' , e =>{
 // ======================================= event tombol hapus cart ======================================= //
-	if ( e.target.className == 'material-icons red-text hapus') {
-			let namaPart =e.target.parentNode.nextSibling.parentNode.childNodes[1].innerText 
+	if ( e.target.classList.contains('hapus') ) {
+			let namaPart =e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.innerText
 			Swal.fire({
 			  title: 'Anda yakin?',
 			  text: `apakah anda yakin menghapus ${namaPart} dari cart`,
@@ -114,35 +128,35 @@ document.querySelector('#content-keranjang').addEventListener('click' , e =>{
 			})
  	}
 /* ======================================= event tombol ubah Qty ======================================= */
-	if ( e.target.className == 'qty' ){
-
-			let namaPart1 = e.target.previousElementSibling.innerText
-			let qty = parseInt(e.target.innerText)
+	if ( e.target.classList.contains('qty') ){
 			
-			async function start() {
-				const {value: number} = await Swal.fire({
-				  title: 'Jumlah '+namaPart1+' :',
-				  input: 'text',
-				  inputValue: qty,
-			 	  showCancelButton: true ,
-		  		  inputValidator: (value) => {
-		    		if (!value) {
-				  	return 'jumlah tidak boleh kosong'
-		    	  	} else if (isNaN(value)) {
-				  	return 'input mengandung karakter terlarang!'
-				  	} 
-		  		  }
-				})
+		let namaPart1 = e.target.nextElementSibling.innerText
+		let qty = parseInt(e.target.innerText)
+			
+		async function start() {
+			const {value: number} = await Swal.fire({
+			  title: 'Jumlah '+namaPart1+' :',
+			  input: 'text',
+			  inputValue: qty,
+		 	  showCancelButton: true ,
+			  inputValidator: (value) => {
+		   		if (!value) {
+			  	return 'jumlah tidak boleh kosong'
+		   	  	} else if (isNaN(value)) {
+			  	return 'input mengandung karakter terlarang!'
+			  	} 
+			  }
+			})
 
-				if (number == 0) {
-					db.ref('/cart/'+namaPart1).set(null)
-					flashMessage( 'berhasil menghapus ' + namaPart1 )
-				} else if (number > 0){
-					db.ref('/cart/'+namaPart1).set(parseInt(number))
-					flashMessage('berhasil merubah qty' + namaPart1+' menjadi '+ number )
-				}
+			if (number == 0) {
+				db.ref('/cart/'+namaPart1).set(null)
+				flashMessage( `berhasil menghapus ${namaPart1}` )
+			} else if (number > 0){
+				db.ref('/cart/'+namaPart1).set(parseInt(number))
+				flashMessage(`berhasil merubah qty ${namaPart1} menjadi ${number}` )
 			}
-			start()
+		}
+		start()
 	}
 /* ======================================= event clear chart ======================================= */
 	if (e.target.id == 'clear-cart'){
@@ -257,7 +271,6 @@ document.querySelector('#list-part').addEventListener( 'click' , e => {
 		    		})
 		    	} else if ( result.value == 'hapus'){
 		      		db.ref(`part/${descPart[0]}/${descPart[1]}`).set(null)
-		      		console.log(`/part/${descPart[0]}/${descPart[1]}`)
 		      		flashMessage(`${descPart[1]} berhasil dihapus`)
 			      	window.location.reload()
 		    	}
@@ -286,17 +299,13 @@ document.querySelector('#list-part').addEventListener( 'click' , e => {
 			})
 		break 
 		default :
-			// console.log('kumahakeun yeuh....!')
 	}
 } )
 
-window.onresize = changeImage
-
-const flashMessage = ( message , timer=1000 , type='success' ) => {
+function flashMessage ( message , timer=1000 , type='success' ){
 	swal.fire({	
 		type : type , 
 		text : message, 
 		showConfirmButton: false, 
 		timer: timer })
-}
-
+}  

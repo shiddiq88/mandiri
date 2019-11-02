@@ -11,23 +11,14 @@
     </head>
 
     <body class="yellow lighten-5">
+<!-- header -->
       <div class="parallax-container" >
         <img src="./assets/mandiri.svg" id="logo-mandiri">
         <div class="parallax">
           <img id="image-parallax" src="" width="100%" >
-          <script type="text/javascript">
-            const changeImage = () => {
-              if (window.innerHeight > window.innerWidth){
-                    document.querySelector('#image-parallax').src = "./assets/alexey-lin-j-0pjgxE1kc-unsplash.png"
-                } else {
-                  document.querySelector('#image-parallax').src = "./assets/alexey-lin-j-0pjgxE1kc-unsplash-panjang.png"
-                }
-            }
-            changeImage()
-          </script>
         </div>
       </div>
-      
+<!-- nav  -->
       <div class="row">
           <div class="col s12">
             <ul class="tabs">
@@ -36,11 +27,11 @@
             </ul>
           </div>
       </div>
-<!--        List-Part konten        -->
+<!-- List-Part konten -->
       <div id="list-part" class="col s12">
         <ul class="collapsible" data-collapsible="accordion">
           <li>
-            <div class="collapsible-header amber darken-2 white-text"><i class="material-icons">view_week</i>Ban Dalam</div>
+            <div class="collapsible-header amber darken-2 white-text"><i class="material-icons">view_week</i><b>Ban Dalam</b></div>
               <div class="collapsible-body">
                 <table>
                   <tbody id="ban_dalam">
@@ -50,7 +41,7 @@
             </div>
           </li>
           <li>
-            <div class="collapsible-header amber white-text"><i class="material-icons">filter_tilt_shift</i>Ban Luar</div>
+            <div class="collapsible-header amber white-text"><i class="material-icons">filter_tilt_shift</i><b>Ban Luar</b></div>
             <div class="collapsible-body">
               <table>
                 <tbody id="ban">
@@ -59,7 +50,7 @@
             </div>
           </li>
           <li>
-            <div class="collapsible-header amber darken-2 white-text"><i class="material-icons">directions_bike</i>Pengerak dan kom</div>
+            <div class="collapsible-header amber darken-2 white-text"><i class="material-icons">directions_bike</i><b>Pengerak dan kom</b></div>
             <div class="collapsible-body">
               <table>
                 <tbody id="penggerak">
@@ -68,7 +59,7 @@
             </div>
           </li>
           <li>
-          <div class="collapsible-header amber white-text"><i class="material-icons">extension</i>lain-lain</div>
+          <div class="collapsible-header amber white-text"><i class="material-icons">extension</i><b>lain-lain</b></div>
             <div class="collapsible-body">
               <table>
                 <tbody id="lain">
@@ -124,7 +115,7 @@
           </div>
         </div>
       </div>
-<!--        CART konten        -->    
+<!-- CART konten -->    
       <div id="content-keranjang" class="col s12">
 
       </div>
@@ -133,7 +124,6 @@
 
       <center><small> &copy; 2019 solihin</small></center>
       <div class="orange" style="padding-top: 8px;"></div>
-      <!-- The core Firebase JS SDK is always required and must be listed first -->
       <script src="https://www.gstatic.com/firebasejs/6.3.1/firebase-app.js"></script>
       <script src="https://www.gstatic.com/firebasejs/6.3.1/firebase-database.js"></script>
       <script type="text/javascript" src="js/currency.js"></script>
