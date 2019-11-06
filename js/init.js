@@ -22,12 +22,12 @@ M.AutoInit();
 
 function changeImage(){
     if (window.innerHeight > window.innerWidth){
-        document.querySelector('#image-parallax').src = "./assets/alexey-lin-j-0pjgxE1kc-unsplash.png"
+        document.querySelector('#image-parallax').src = "./assets/alexey-lin-j-0pjgxE1kc-unsplash.webp"
         document.querySelector('body').style.padding="0px"
         document.querySelector('.parallax-container').style.height="20 0px"
         document.querySelector('#logo-mandiri').style.height="180px"
     } else {
-        document.querySelector('#image-parallax').src = "./assets/alexey-lin-j-0pjgxE1kc-unsplash-panjang.png"
+        document.querySelector('#image-parallax').src = "./assets/alexey-lin-j-0pjgxE1kc-unsplash-panjang.webp"
         document.querySelector('body').style.padding="0px 2%"
         document.querySelector('.parallax-container').style.height="250px"
         document.querySelector('#logo-mandiri').style.height="200px"
@@ -64,7 +64,7 @@ cartReff.on('value', function(snapCart){
 	let cart = (snapCart.exists()) ? snapCart.val() : []
 	let jmlCart = cart.length == 0 ? '' : Object.keys(cart).length
 	if (jmlCart==0){
-		document.querySelector('#content-keranjang').innerHTML = '<img src="./assets/empty-chart.png" alt="keranjang kosong" height="220px">'
+		document.querySelector('#content-keranjang').innerHTML = '<img src="./assets/empty-chart.svg" alt="keranjang kosong" height="220px">'
 		document.querySelector('#content-keranjang').style.background = 'url("./assets/re32.png")'
 	} else {
 		document.querySelector('#content-keranjang').style.background = ''

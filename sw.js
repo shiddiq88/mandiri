@@ -16,10 +16,10 @@ self.addEventListener('install', function(event) {
     		  '/js/materialize.min.js',
     		  '/js/init.js',
     		  '/js/sweetalert2.min.js',
-    			'/assets/alexey-lin-j-0pjgxE1kc-unsplash.png',
-          '/assets/alexey-lin-j-0pjgxE1kc-unsplash-panjang.png',
+    			'/assets/alexey-lin-j-0pjgxE1kc-unsplash.webp',
+          '/assets/alexey-lin-j-0pjgxE1kc-unsplash-panjang.webp',
     			'/assets/re32.png',
-    			'/assets/empty-chart.png',
+    			'/assets/empty-chart.svg',
     			'/assets/mandiri.svg',
     			'/assets/icons/bengkel-mandiri-72.png',
     			'/assets/icons/bengkel-mandiri-96.png',
@@ -49,17 +49,5 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  event.respondWith(async function() {
-    const cache = await caches.open('mysite-dynamic');
-    const cachedResponse = await cache.match(event.request);
-    const networkResponsePromise = fetch(event.request);
-
-    event.waitUntil(async function() {
-      const networkResponse = await networkResponsePromise;
-      await cache.put(event.request, networkResponse.clone());
-    }());
-
-    // Returned the cached response if we have one, otherwise return the network response.
-    return cachedResponse || networkResponsePromise;
-  }());
+  event.respondWith(caches.match(event.request));
 });
