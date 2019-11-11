@@ -13,11 +13,11 @@ self.addEventListener('install', function(event) {
     			'/css/materialize.min.css',
     			'/css/style.css',
     			'/js/currency.js',
-    		  '/js/materialize.min.js',
-    		  '/js/init.js',
-    		  '/js/sweetalert2.min.js',
+    			'/js/materialize.min.js',
+    			'/js/init.js',
+    			'/js/sweetalert2.min.js',
     			'/assets/alexey-lin-j-0pjgxE1kc-unsplash.webp',
-          '/assets/alexey-lin-j-0pjgxE1kc-unsplash-panjang.webp',
+	        	'/assets/alexey-lin-j-0pjgxE1kc-unsplash-panjang.webp',
     			'/assets/re32.png',
     			'/assets/empty-chart.svg',
     			'/assets/mandiri.svg',
@@ -28,7 +28,7 @@ self.addEventListener('install', function(event) {
     			'/assets/icons/bengkel-mandiri-152.png',
     			'/assets/icons/bengkel-mandiri-192.png',
     			'/assets/icons/bengkel-mandiri-384.png',
-  			'/assets/icons/bengkel-mandiri-512.png'
+  				'/assets/icons/bengkel-mandiri-512.png'
     		]);
       })
   );
@@ -49,5 +49,8 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  event.respondWith(caches.match(event.request));
+  event.respondWith(async function() {
+    const response = await caches.match(event.request);
+    return response || fetch(event.request);
+  }());
 });
